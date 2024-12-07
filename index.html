@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Contacto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #mensaje-respuesta {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form name="submit-form" id="submit-form">
+            <div class="form-group">
+                <label for="nombres">Nombres</label>
+                <input 
+                    name="nombres" 
+                    id="nombres" 
+                    type="text" 
+                    placeholder="Ingrese sus nombres" 
+                    required 
+                    minlength="2" 
+                    maxlength="50"
+                    pattern="^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input 
+                    name="apellidos" 
+                    id="apellidos" 
+                    type="text" 
+                    placeholder="Ingrese sus apellidos" 
+                    required 
+                    minlength="2" 
+                    maxlength="50"
+                    pattern="^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input 
+                    name="email" 
+                    id="email" 
+                    type="email" 
+                    placeholder="ejemplo@dominio.com" 
+                    required 
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                >
+            </div>
+            
+            <button type="submit" class="btn" id="enviar-btn">Enviar</button>
+        </form>
+        
+        <div id="mensaje-respuesta"></div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyHvmlI58Y9Bl_sJeH0UI6-B3pxrC84Ok9yDxtHBsPAgYsRvD8Qn9cbWcG2X4AxLsGd/exec';
+        const form = document.forms['submit-form'];
+        const botonEnviar = document.getElementById('enviar-btn');
+        const mensajeRespuesta = document.getElementById('mensaje-respuesta');
+
+        // Validación en tiempo real
+        const campos = form.querySelectorAll('input[required]');
+        campos.forEach(campo => {
+            campo.addEventListener('input', validarCampo);
+        });
+
+        function validarCampo(evento) {
+            const campo = evento.target;
+            if (campo.validity.valid) {
+                campo.style.borderColor = '#28a745';
+            } else {
+                campo.style.borderColor = '#dc3545';
+            }
+            validarFormulario();
+        }
+
+        function validarFormulario() {
+            const camposValidos = Array.from(campos).every(campo => campo.validity.valid);
+            botonEnviar.disabled = !camposValidos;
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            botonEnviar.disabled = true;
+            botonEnviar.textContent = 'Enviando...';
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new FormData(form)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.text();
+            })
+            .then(data => {
+                mensajeRespuesta.textContent = '¡Formulario enviado exitosamente!';
+                mensajeRespuesta.className = 'mensaje-exito';
+                form.reset();
+                botonEnviar.textContent = 'Enviar';
+                botonEnviar.disabled = false;
+            })
+            .catch(error => {
+                mensajeRespuesta.textContent = 'Ocurrió un error. Intente nuevamente.';
+                mensajeRespuesta.className = 'mensaje-error';
+                botonEnviar.textContent = 'Enviar';
+                botonEnviar.disabled = false;
+                console.error('Error:', error.message);
+            });
+        });
+
+        // Validación inicial
+        validarFormulario();
+    </script>
+</body>
+</html>
