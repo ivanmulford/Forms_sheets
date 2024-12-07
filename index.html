@@ -67,7 +67,7 @@
             <div class="form-group">
                 <label for="nombres">Nombres</label>
                 <input 
-                    name="nombres" 
+                    name="Nombres" 
                     id="nombres" 
                     type="text" 
                     placeholder="Ingrese sus nombres" 
@@ -77,25 +77,12 @@
                     pattern="^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$"
                 >
             </div>
-            
-            <div class="form-group">
-                <label for="apellidos">Apellidos</label>
-                <input 
-                    name="apellidos" 
-                    id="apellidos" 
-                    type="text" 
-                    placeholder="Ingrese sus apellidos" 
-                    required 
-                    minlength="2" 
-                    maxlength="50"
-                    pattern="^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$"
-                >
-            </div>
-            
+          
+           
             <div class="form-group">
                 <label for="email">Correo Electrónico</label>
                 <input 
-                    name="email" 
+                    name="Emaill" 
                     id="email" 
                     type="email" 
                     placeholder="ejemplo@dominio.com" 
@@ -103,7 +90,19 @@
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                 >
             </div>
-            
+            <div class="form-group">
+                <label for="apellidos">Mensaje</label>
+                <input 
+                    name="Mensaje" 
+                    id="Mensaje" 
+                    type="text" 
+                    placeholder="Ingrese sus Comentarios" 
+                    required 
+                    minlength="2" 
+                    maxlength="50"
+                    pattern="^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$"
+                >
+            </div>
             <button type="submit" class="btn" id="enviar-btn">Enviar</button>
         </form>
         
